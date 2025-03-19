@@ -6,6 +6,8 @@
 #define OLED_RESET -1        
 #define SCREEN_ADDRESS 0x3C  
 
+#define SMALL_30_TO_0_TIME_FONT 0
+
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 unsigned long displayLastUpdate = 0;
@@ -24,7 +26,7 @@ void displayOnLoop(){
       display.setCursor(0, 15*(i+1));
       display.setTextSize(2);
       display.printf("%2.2f;", launchTotalTime[i][0]);
-      display.setTextSize(2-);
+      display.setTextSize(2-SMALL_30_TO_0_TIME_FONT);
       display.printf("%2.2f\n", launchTotalTime[i][1]);
       //displayCurrTimeRecordIdx++;
     }
