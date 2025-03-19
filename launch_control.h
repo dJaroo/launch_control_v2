@@ -1,6 +1,8 @@
 #define LAUNCH_RELAY_PIN 4
 #define LAUNCH_TRIGGER_BUTTON_PIN 6
 #define NUMBER_OF_TIME_RECORDS 3
+#define SAFETY_CUTOFF_TIME 15000  //ms
+
 
 unsigned long launchControlTimer = 0;
 bool launchInProgress = 0;
@@ -33,6 +35,11 @@ void launchOnLoop() {
   if (launchInProgress) {
     if (linearVelocity >= TARGET_VELOCITY) {
       launchEnd();
+    } else if (millis() - launchControlTimer >= SAFETY_CUTOFF_TIME || (millis() - launchControlTimer >= 2000 && digitalRead(LAUNCH_TRIGGER_BUTTON_PIN) == HIGH)) {
+      launchInProgress = 0;
+      coastInProgress = 0;
+      digitalWrite(LAUNCH_RELAY_PIN, LOW);
+      delay(5000);
     }
   } else if (coastInProgress) {
     if (linearVelocity <= 0.28) {  //we're rounding down anything beneath ~1km/h to 0
